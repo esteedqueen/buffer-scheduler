@@ -1,0 +1,43 @@
+GIT
+  remote: git@github.com:happybearsoftware/hbs-content.git
+  revision: ebcdc324997d0268e1e464c4928c04db82f349eb
+  specs:
+    hbs-content (0.9.0)
+      contentful (= 0.9.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
+    contentful (0.9.0)
+      http (~> 0.8)
+      multi_json (~> 1)
+    domain_name (0.5.20170404)
+      unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.1.1)
+    http (0.9.9)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    http-form_data (1.0.3)
+    http_parser.rb (0.6.0)
+    multi_json (1.12.1)
+    public_suffix (2.0.5)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  contentful
+  dotenv
+  hbs-content (= 0.9.0)!
+
+BUNDLED WITH
+   1.15.3

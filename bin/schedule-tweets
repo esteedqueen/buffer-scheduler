@@ -1,3 +1,18 @@
 #! /usr/bin/env ruby
+puts "Hello!"
 
-# Do some things
+require 'rubygems'
+require 'bundler/setup'
+require 'dotenv'
+Dotenv.load
+
+require 'hbs_content'
+
+puts HbsContent::VERSION
+
+HbsContent.configure(:contentful,
+  access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
+  space: ENV['CONTENTFUL_SPACE_ID']
+)
+
+puts HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
