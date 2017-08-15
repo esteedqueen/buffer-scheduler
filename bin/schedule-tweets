@@ -7,6 +7,9 @@ require 'dotenv'
 Dotenv.load
 
 require 'hbs_content'
+require 'buffer'
+
+require_relative '../lib/buffer_schedule'
 
 puts HbsContent::VERSION
 
@@ -15,4 +18,14 @@ HbsContent.configure(:contentful,
   space: ENV['CONTENTFUL_SPACE_ID']
 )
 
-puts HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
+buffer_client = Buffer::Client.new(ENV['BUFFER_ACCESS_TOKEN'])
+
+advertisement = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
+random_content = HbsContent::ListOfTweets.internal_content.tweeets
+
+puts client.profiles[0].id # TODO map some of the profile data to json so the details can be reused
+puts client.profiles.count # TODO map some of the profile data to json so the details can be reused
+
+buffer_schedule = BufferSchedule.new(client)
+buffer_schedule.update(advertisement, random_content)
+
