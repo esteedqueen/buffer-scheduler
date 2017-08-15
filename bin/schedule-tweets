@@ -1,5 +1,4 @@
 #! /usr/bin/env ruby
-puts "Hello!"
 
 require 'rubygems'
 require 'bundler/setup'
@@ -11,8 +10,6 @@ require 'buffer'
 
 require_relative '../lib/buffer_schedule'
 
-puts HbsContent::VERSION
-
 HbsContent.configure(:contentful,
   access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
   space: ENV['CONTENTFUL_SPACE_ID']
@@ -20,12 +17,18 @@ HbsContent.configure(:contentful,
 
 buffer_client = Buffer::Client.new(ENV['BUFFER_ACCESS_TOKEN'])
 
-advertisement = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
-random_content = HbsContent::ListOfTweets.internal_content.tweeets
+advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
+random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text)
 
-puts client.profiles[0].id # TODO map some of the profile data to json so the details can be reused
-puts client.profiles.count # TODO map some of the profile data to json so the details can be reused
+puts random_contents.class
+puts random_contents.count
+buffer_schedule = BufferSchedule.new(buffer_client)
 
-buffer_schedule = BufferSchedule.new(client)
-buffer_schedule.update(advertisement, random_content)
+if buffer_schedule.is_empty?
+  buffer_schedule.update(advertisements.concat(random_contents))
+  buffer_schedule.shuffle
+  puts "buffer_schedule updated and shuffled"
+else
+  puts "There are tweets in the buffer_schedule"
+end
 
