@@ -10,6 +10,9 @@ require 'buffer'
 
 require_relative '../lib/buffer_schedule'
 
+# Disable Hashie warning "You are setting a key that conflicts with a built-in method" flooding the logs in buffer api gem
+Hashie.logger = Logger.new(nil) 
+
 HbsContent.configure(:contentful,
   access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
   space: ENV['CONTENTFUL_SPACE_ID']
