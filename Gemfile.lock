@@ -27,6 +27,7 @@ GEM
     contentful (0.9.0)
       http (~> 0.8)
       multi_json (~> 1)
+    diff-lcs (1.3)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.1)
@@ -49,6 +50,19 @@ GEM
     multipart-post (2.0.0)
     public_suffix (2.0.5)
     rake (12.0.0)
+    rspec (3.6.0)
+      rspec-core (~> 3.6.0)
+      rspec-expectations (~> 3.6.0)
+      rspec-mocks (~> 3.6.0)
+    rspec-core (3.6.0)
+      rspec-support (~> 3.6.0)
+    rspec-expectations (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-mocks (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-support (3.6.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.4)
@@ -62,6 +76,7 @@ DEPENDENCIES
   contentful
   dotenv
   hbs-content (= 0.9.0)!
+  rspec
 
 BUNDLED WITH
    1.15.3

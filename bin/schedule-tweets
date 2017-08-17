@@ -11,7 +11,7 @@ require 'buffer'
 require_relative '../lib/buffer_schedule'
 
 # Disable Hashie warning "You are setting a key that conflicts with a built-in method" flooding the logs in buffer api gem
-Hashie.logger = Logger.new(nil) 
+Hashie.logger = Logger.new(nil)
 
 HbsContent.configure(:contentful,
   access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
@@ -19,19 +19,11 @@ HbsContent.configure(:contentful,
 )
 
 buffer_client = Buffer::Client.new(ENV['BUFFER_ACCESS_TOKEN'])
+twitter_username = ENV['TWITTER_USERNAME']
 
 advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
-random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text)
+random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)
 
-puts random_contents.class
-puts random_contents.count
-buffer_schedule = BufferSchedule.new(buffer_client)
+buffer_schedule = BufferSchedule.new(buffer_client, twitter_username)
 
-if buffer_schedule.is_empty?
-  buffer_schedule.update(advertisements.concat(random_contents))
-  buffer_schedule.shuffle
-  puts "buffer_schedule updated and shuffled"
-else
-  puts "There are tweets in the buffer_schedule"
-end
-
+ScheduleTweetsRunner.new.run(buffer_schedule, advertisements.concat(random_contents))

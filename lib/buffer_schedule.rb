@@ -1,12 +1,11 @@
 class BufferSchedule
 
-  attr_accessor :client, :profile_id
+  attr_accessor :client, :profile_id, :username
 
-  def initialize(client)
+  def initialize(client, username)
     @client = client
-
-    # Because I already know that @happybearsoft is the first profile - can be refactored to find the profile_id by @username
-    @profile_id = client.profiles.map(&:id).first
+    @username = username
+    @profile_id = client.profiles.select { | key| key.formatted_username == @username }.map(&:id)
   end
 
   def is_empty?
@@ -30,9 +29,6 @@ class BufferSchedule
   def shuffle
     @client.shuffle_updates(@profile_id, {})   
   end
-
-
-private
 
   def scheduled_tweets
     @client.updates_by_profile_id(@profile_id, { status: :pending})
