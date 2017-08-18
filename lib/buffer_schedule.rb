@@ -5,7 +5,7 @@ class BufferSchedule
   def initialize(client, username)
     @client = client
     @username = username
-    @profile_id = client.profiles.select { | key| key.formatted_username == @username }.map(&:id)
+    @profile_id = client.profiles.find { |k| k.formatted_username == @username }.id
   end
 
   def is_empty?
@@ -14,7 +14,7 @@ class BufferSchedule
 
   def update(tweets)
     tweets.each do |tweet_text|
-      client.create_update(
+      @client.create_update(
         body: {
           text:
             "#{tweet_text}",
