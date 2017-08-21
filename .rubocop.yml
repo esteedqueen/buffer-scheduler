@@ -1,0 +1,21 @@
+# Commonly used screens these days easily fit more than 80 characters.
+Metrics/LineLength:
+  Max: 120
+
+# Too short methods lead to extraction of single-use methods, which can make
+# the code easier to read (by naming things), but can also clutter the class
+Metrics/MethodLength: 
+  Max: 20
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/*'
+
+Style/Documentation:
+  Enabled: false 
+
+# Why is cop flagging this?
+# Use scheduled_tweets.total.zero? instead of scheduled_tweets.total == 0
+# Need to read more to understand why - disabling right now
+Style/NumericPredicate:
+  Enabled: false
