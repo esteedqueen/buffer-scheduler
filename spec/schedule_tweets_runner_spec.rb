@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe ScheduleTweetsRunner do
-  let(:tweets) { tweets = ["jane", "ade"] }
+  let(:tweets) { %w[jane ade] }
 
-  context 'buffer schedule is empty' do 
+  context 'buffer schedule is empty' do
     it 'runs the buffer schedule updates' do
-      buffer_schedule = instance_double("BufferSchedule", is_empty?: true)
-      
+      buffer_schedule = instance_double('BufferSchedule', empty?: true)
+
       allow(buffer_schedule).to receive(:update).with(tweets)
       allow(buffer_schedule).to receive(:shuffle)
 
@@ -20,7 +20,7 @@ describe ScheduleTweetsRunner do
   end
   context 'buffer schedule is not empty' do
     it 'does nothing' do
-      buffer_schedule = instance_double("BufferSchedule", is_empty?: false)
+      buffer_schedule = instance_double('BufferSchedule', empty?: false)
 
       allow(buffer_schedule).to receive(:update).with(tweets)
       allow(buffer_schedule).to receive(:shuffle)
@@ -33,6 +33,4 @@ describe ScheduleTweetsRunner do
       expect(buffer_schedule).not_to have_received(:shuffle)
     end
   end
-
-
 end

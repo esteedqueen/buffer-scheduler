@@ -1,36 +1,38 @@
 class BufferSchedule
-
-  attr_accessor :client, :profile_id, :username
+  attr_accessor :client, :username
 
   def initialize(client, username)
     @client = client
     @username = username
-    @profile_id = client.profiles.find { |k| k.formatted_username == @username }.id
   end
 
-  def is_empty?
+  def empty?
     scheduled_tweets.total == 0
-  end  
+  end
 
   def update(tweets)
     tweets.each do |tweet_text|
       @client.create_update(
         body: {
           text:
-            "#{tweet_text}",
+            tweet_text.to_s,
           profile_ids: [
-            "#{@profile_id}"
+            profile_id.to_s
           ]
-        },
+        }
       )
     end
   end
 
   def shuffle
-    @client.shuffle_updates(@profile_id, {})   
+    @client.shuffle_updates(profile_id, {})
   end
 
   def scheduled_tweets
-    @client.updates_by_profile_id(@profile_id, { status: :pending})
+    @client.updates_by_profile_id(profile_id, status: :pending)
+  end
+
+  def profile_id
+    @profile_id ||= @client.profiles.find { |k| k.formatted_username == @username }.id
   end
 end
