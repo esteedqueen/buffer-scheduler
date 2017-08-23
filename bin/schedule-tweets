@@ -9,7 +9,8 @@ require 'hbs_content'
 require 'buffer'
 
 require_relative '../lib/buffer_schedule'
-require_relative '../lib/schedule_tweets_runner'
+# require_relative '../lib/schedule_tweets_runner'
+require_relative '../lib/custom_log'
 
 # Disable Hashie warning flooding the logs in buffer api gem
 Hashie.logger = Logger.new(nil)
@@ -21,9 +22,24 @@ HbsContent.configure(:contentful,
 buffer_client = Buffer::Client.new(ENV['BUFFER_ACCESS_TOKEN'])
 twitter_username = ENV['TWITTER_USERNAME']
 
-advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
-random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)
-
 buffer_schedule = BufferSchedule.new(buffer_client, twitter_username)
 
-ScheduleTweetsRunner.new.run(buffer_schedule, advertisements.concat(random_contents))
+CustomLog.log.info 'Running buffer-scheduler'
+
+if buffer_schedule.empty?
+  buffer_schedule.update(fetch_tweets)
+  buffer_schedule.shuffle
+  CustomLog.log.info "#{tweets.count} tweets successfully added to #{twitter_username} profile"
+else
+  CustomLog.log.info "Buffer contains #{buffer_schedule.scheduled_tweets.count} tweets, doing nothing and exiting"
+end
+
+
+def fetch_tweets
+  CustomLog.log.info 'Buffer was empty, fetching tweets from contentful'
+
+  advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
+  random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)
+  CustomLog.log.info "Attempting to add 8 tweets to #{twitter_username} profile"
+  return advertisements.concat(random_contents)   
+end
