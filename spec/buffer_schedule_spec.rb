@@ -49,7 +49,7 @@ describe BufferSchedule do
 
   it '.shuffle' do
     setup
-    allow(buffer_client).to receive(:shuffle_updates).with(profile_id, {}).and_return(shuffle_response)
+    allow(buffer_client).to receive(:shuffle_updates).with(profile_id, count: 9).and_return(shuffle_response)
 
     response = BufferSchedule.new(buffer_client, twitter_username).shuffle
 

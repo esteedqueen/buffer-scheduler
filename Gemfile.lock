@@ -47,7 +47,12 @@ GEM
       domain_name (~> 0.5)
     http-form_data (1.0.3)
     http_parser.rb (0.6.0)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.6)
     multi_json (1.12.1)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     parallel (1.12.0)
     parser (2.4.0.0)
@@ -92,6 +97,7 @@ DEPENDENCIES
   contentful
   dotenv
   hbs-content (= 0.9.0)!
+  httparty
   rspec
   rubocop (~> 0.49.1)
 

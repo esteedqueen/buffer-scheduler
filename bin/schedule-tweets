@@ -4,42 +4,27 @@ require 'rubygems'
 require 'bundler/setup'
 require 'dotenv'
 Dotenv.load
-
 require 'hbs_content'
 require 'buffer'
+require 'httparty'
 
 require_relative '../lib/buffer_schedule'
-# require_relative '../lib/schedule_tweets_runner'
-require_relative '../lib/custom_log'
+require_relative '../lib/schedule_tweets_runner'
+require_relative '../lib/log_entry'
 
 # Disable Hashie warning flooding the logs in buffer api gem
 Hashie.logger = Logger.new(nil)
-
-HbsContent.configure(:contentful,
-                     access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
-                     space: ENV['CONTENTFUL_SPACE_ID'])
 
 buffer_client = Buffer::Client.new(ENV['BUFFER_ACCESS_TOKEN'])
 twitter_username = ENV['TWITTER_USERNAME']
 
 buffer_schedule = BufferSchedule.new(buffer_client, twitter_username)
+LogEntry.log.info 'Running buffer-scheduler'
 
-CustomLog.log.info 'Running buffer-scheduler'
+# schedule tweets
+ScheduleTweetsRunner.new.run(buffer_schedule, twitter_username)
 
-if buffer_schedule.empty?
-  buffer_schedule.update(fetch_tweets)
-  buffer_schedule.shuffle
-  CustomLog.log.info "#{tweets.count} tweets successfully added to #{twitter_username} profile"
-else
-  CustomLog.log.info "Buffer contains #{buffer_schedule.scheduled_tweets.count} tweets, doing nothing and exiting"
-end
-
-
-def fetch_tweets
-  CustomLog.log.info 'Buffer was empty, fetching tweets from contentful'
-
-  advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
-  random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)
-  CustomLog.log.info "Attempting to add 8 tweets to #{twitter_username} profile"
-  return advertisements.concat(random_contents)   
-end
+# read script logs from logfile and send logs to zapier
+log_output = File.open('debug.log', 'r', &:read)
+puts log_output # log to console
+LogEntry.send_to_zapier(log_output)
