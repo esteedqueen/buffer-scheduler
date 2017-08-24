@@ -12,15 +12,15 @@ class ScheduleTweetsRunner
 
   def run(buffer_schedule, username)
     if buffer_schedule.empty?
-      buffer_schedule.update(tweets)
+      buffer_schedule.update(fetch_tweets)
       buffer_schedule.shuffle
-      LogEntry.log.info "#{tweets.count} tweets successfully added to #{username} profile"
+      LogEntry.log.info "#{fetch_tweets.count} tweets successfully added to #{username} profile"
     else
-      LogEntry.log.info "Buffer contains #{buffer_schedule.scheduled_tweets.count} tweets, doing nothing and exiting"
+      LogEntry.log.info "Buffer contains #{buffer_schedule.scheduled_tweets.total} tweets, doing nothing and exiting"
     end
   end
 
-  def tweets
+  def fetch_tweets
     LogEntry.log.info 'Buffer was empty, fetching tweets from contentful'
     advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
     random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)

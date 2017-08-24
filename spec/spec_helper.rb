@@ -11,8 +11,8 @@ require 'json'
 require 'ostruct'
 
 # Mocks of some of the Buffer API responses
-def scheduled_tweets
-  JSON.parse('{ "total": 3, "updates": [ { } ] }', object_class: OpenStruct)
+def scheduled_tweets_response
+  JSON.parse('{ "total": 9, "updates": [ { } ] }', object_class: OpenStruct)
 end
 
 def profiles

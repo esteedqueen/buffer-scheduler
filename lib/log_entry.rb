@@ -11,10 +11,10 @@ class LogEntry
     if @logger.nil?
       @logger = Logger.new 'debug.log'
       @logger.level = Logger::DEBUG
-      @logger.formatter = proc do |severity, datetime, progname, msg|
-          date_format = datetime.strftime("%Y-%m-%d %H:%M:%S")       
-          "[ #{date_format} ] #{msg}\n"
-      end      
+      @logger.formatter = proc do |_severity, datetime, _progname, msg|
+        date_format = datetime.strftime('%Y-%m-%d %H:%M:%S')
+        "[ #{date_format} ] #{msg}\n"
+      end
     end
     @logger
   end
@@ -28,7 +28,7 @@ class LogEntry
 
     request = Net::HTTP::Post.new(url)
     request['content-type'] = 'application/json'
-    request.body = { 'buffer_scheduler_log_output': log_output.to_s }.to_json
+    request.body = { buffer_scheduler_log_output: log_output.to_s }.to_json
     response = JSON.parse(http.request(request).body)
     File.delete('debug.log') if response['status'] == 'success'
   end
