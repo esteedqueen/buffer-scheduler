@@ -1,11 +1,32 @@
+require 'hbs_content'
+require 'dotenv'
+Dotenv.load
+require_relative 'log_entry'
+
 class ScheduleTweetsRunner
-  def run(buffer_schedule, tweets)
+  def initialize
+    HbsContent.configure(:contentful,
+                         access_token: ENV['CONTENTFUL_ACCESS_TOKEN'],
+                         space: ENV['CONTENTFUL_SPACE_ID'])
+  end
+
+  def run(buffer_schedule, username)
     if buffer_schedule.empty?
-      buffer_schedule.update(tweets)
+      buffer_schedule.update(fetch_tweets)
       buffer_schedule.shuffle
-      puts 'buffer_schedule updated and shuffled'
+      LogEntry.log.info "#{fetch_tweets.count} tweets successfully added to #{username} profile"
     else
-      puts 'There are tweets in the buffer_schedule'
+      LogEntry.log.info "Buffer contains #{buffer_schedule.scheduled_tweets.total} tweets, doing nothing and exiting"
     end
+  end
+
+  def fetch_tweets
+    LogEntry.log.info 'Buffer was empty, fetching tweets from contentful'
+    advertisements = HbsContent::ListOfTweets.advertisement.tweets.map(&:text)
+    random_contents = HbsContent::ListOfTweets.internal_content.tweets.map(&:text).shuffle.take(6)
+
+    tweets = advertisements.concat(random_contents)
+    LogEntry.log.info "Attempting to add #{tweets.count} tweets to profile"
+    tweets
   end
 end

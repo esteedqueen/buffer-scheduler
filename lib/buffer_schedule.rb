@@ -1,3 +1,5 @@
+require_relative 'log_entry'
+
 class BufferSchedule
   attr_accessor :client, :username
 
@@ -7,6 +9,7 @@ class BufferSchedule
   end
 
   def empty?
+    LogEntry.log.info "Checking for empty in #{@username} profile"
     scheduled_tweets.total == 0
   end
 
@@ -25,7 +28,7 @@ class BufferSchedule
   end
 
   def shuffle
-    @client.shuffle_updates(profile_id, {})
+    @client.shuffle_updates(profile_id, count: 9)
   end
 
   def scheduled_tweets

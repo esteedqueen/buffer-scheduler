@@ -16,17 +16,17 @@ describe BufferSchedule do
     setup
     allow(buffer_client).to receive(:updates_by_profile_id)
       .with(profile_id, status: :pending)
-      .and_return(scheduled_tweets)
+      .and_return(scheduled_tweets_response)
 
     response = BufferSchedule.new(buffer_client, twitter_username).scheduled_tweets
 
-    expect(response).to eq scheduled_tweets
+    expect(response).to eq scheduled_tweets_response
   end
 
   it '.empty?' do
     buffer_schedule = instance_double('BufferSchedule')
-    allow(buffer_schedule).to receive(:scheduled_tweets).and_return(scheduled_tweets)
-    allow(buffer_schedule).to receive(:empty?).and_return(scheduled_tweets['total'] == 0)
+    allow(buffer_schedule).to receive(:scheduled_tweets).and_return(scheduled_tweets_response)
+    allow(buffer_schedule).to receive(:empty?).and_return(scheduled_tweets_response['total'] == 0)
 
     expect(buffer_schedule.empty?).to eq false
   end
@@ -49,7 +49,7 @@ describe BufferSchedule do
 
   it '.shuffle' do
     setup
-    allow(buffer_client).to receive(:shuffle_updates).with(profile_id, {}).and_return(shuffle_response)
+    allow(buffer_client).to receive(:shuffle_updates).with(profile_id, count: 9).and_return(shuffle_response)
 
     response = BufferSchedule.new(buffer_client, twitter_username).shuffle
 
