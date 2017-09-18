@@ -30,6 +30,11 @@ class LogEntry
     request['content-type'] = 'application/json'
     request.body = { buffer_scheduler_log_output: log_output.to_s }.to_json
     response = JSON.parse(http.request(request).body)
+
+    delete_log_file(response)
+  end
+
+  def delete_log_file(response)
     File.delete('debug.log') if response['status'] == 'success'
   end
 end
