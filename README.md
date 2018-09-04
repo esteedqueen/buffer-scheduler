@@ -6,7 +6,7 @@ The script picks tweet contents from our contentful api using `hbs-content` and 
 # Setup
 
 ```
-git clone git@github.com:happybearsoftware/buffer-scheduler.git
+git clone git@github.com:esteedqueen/buffer-scheduler.git
 cd buffer-scheduler
 
 bundle install
